@@ -18,7 +18,7 @@ const WishesPage = ({ onNavigate }) => {
               As you turn 26, I wish you all the happiness in the world. 
               May this new year of your life be filled with adventure, love, 
               laughter, and all the beautiful moments you deserve. 
-              You are extraordinary, and I'm so grateful to be part of your journey.
+              YThank you for being there with me my love. I love you ummaaaahhhh !
             </p>
           </div>
 
@@ -26,9 +26,9 @@ const WishesPage = ({ onNavigate }) => {
             <div className="wish-icon">💕</div>
             <h2>Our Future Together</h2>
             <p>
-              Here's to creating more beautiful memories, sharing more laughs, 
-              and building something amazing together. Happy Birthday, beautiful! 
-              You deserve all the love and happiness in the world.
+              Hehe To be honest mujhe na pata humara future kya hoga but I can
+              assure you one thing.I'll fight till the end for our love. Baaki
+              sab to govind aur Radha Rani pe hai. Radhe Radhe !!
             </p>
           </div>
 
@@ -36,8 +36,10 @@ const WishesPage = ({ onNavigate }) => {
             <div className="wish-icon">✨</div>
             <h2>What Makes You Special</h2>
             <p>
-              Your kindness touches everyone around you, your smile lights up the darkest days, 
-              and your love makes everything better. Thank you for being the amazing person you are.
+              Everything about you is just sooo damn special. Like i can just not 
+              Imagine any girl other than you. The way you laugh, the way you talk,
+              The way you fight, the way you love, The way you act. I just love every
+              every single bit of it.
             </p>
           </div>
 
@@ -45,16 +47,17 @@ const WishesPage = ({ onNavigate }) => {
             <div className="wish-icon">🌙</div>
             <h2>Under the Stars</h2>
             <p>
-              Just like you love the moon and stars, you bring light to my darkest nights. 
-              May your birthday be as magical as you are, and may all your dreams come true 
-              under the starlit sky you love so much.
+              I don't know in this life or the next one. One day we would be laying beisde
+              on the grass under somewhere in very clear sky. Going throught our journey in flashbacks.
+              I saw this in my dream. I know it would come true.
             </p>
           </div>
         </div>
 
         <div className="final-message">
           <h2>Happy 26th Birthday, Ayushi!</h2>
-          <p>🎉 You are loved, cherished, and celebrated today and always 🎉</p>
+          <p>🎉 I love you soooo damn much bacchu.
+             Ye jo smile abhi tere chehre pe hai na never loose it.🎉</p>
         </div>
       </main>
 
@@ -172,7 +175,7 @@ const WishesPage = ({ onNavigate }) => {
         }
 
         .page-content {
-          padding: 3rem 2rem;
+          padding: 1rem 2rem 3rem 2rem;
           max-width: 1000px;
           margin: 0 auto;
         }
@@ -317,7 +320,7 @@ const WishesPage = ({ onNavigate }) => {
           }
 
           .page-content {
-            padding: 2rem 1rem;
+            padding: 1rem 1rem 2rem 1rem;
           }
 
           .wishes-container {

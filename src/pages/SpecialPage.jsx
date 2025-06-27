@@ -36,6 +36,14 @@ const SpecialPage = ({ onNavigate }) => {
   const handleReasonClick = (reasonId, event) => {
     event.preventDefault()
     event.stopPropagation()
+    
+    // Add click effect
+    const star = event.currentTarget
+    star.classList.add('star-clicked')
+    setTimeout(() => {
+      star.classList.remove('star-clicked')
+    }, 600)
+    
     setRevealedReasons(prev => new Set([...prev, reasonId]))
   }
 
@@ -94,17 +102,25 @@ const SpecialPage = ({ onNavigate }) => {
       
       <main className="page-content">
         <div className="constellation-container">
-          {reasons.map((reason, index) => (
-            <div 
-              key={reason.id} 
-              className={`reason-star ${revealedReasons.has(reason.id) ? 'revealed' : ''}`}
-              style={{
-                left: `${8 + (index % 6) * 14}%`,
-                top: `${8 + Math.floor(index / 6) * 18}%`,
-                animationDelay: `${index * 0.1}s`
-              }}
-              onClick={(e) => handleReasonClick(reason.id, e)}
-            >
+          {reasons.map((reason, index) => {
+            // Create a more spread out galaxy pattern
+            const row = Math.floor(index / 7)
+            const col = index % 7
+            const offsetX = (row % 2) * 7 // Alternate row offset for honeycomb pattern
+            const left = 5 + col * 13 + offsetX
+            const top = 10 + row * 20
+            
+            return (
+              <div 
+                key={reason.id} 
+                className={`reason-star ${revealedReasons.has(reason.id) ? 'revealed' : ''}`}
+                style={{
+                  left: `${left}%`,
+                  top: `${top}%`,
+                  animationDelay: `${index * 0.15}s`
+                }}
+                onClick={(e) => handleReasonClick(reason.id, e)}
+              >
               <div className="star-core">
                 <span className="star-number">{reason.id}</span>
               </div>
@@ -113,15 +129,19 @@ const SpecialPage = ({ onNavigate }) => {
               
               {revealedReasons.has(reason.id) && (
                 <div 
-                  className={`reason-popup ${Math.floor(index / 6) < 2 ? 'popup-below' : 'popup-above'}`}
+                  className={`reason-popup ${row < 2 ? 'popup-below' : 'popup-above'}`}
                 >
                   <div className="popup-emoji">{reason.emoji}</div>
                   <h3 className="popup-title">{reason.title}</h3>
                   <p className="popup-text">{reason.text}</p>
+                  <div className="popup-counter">
+                    {revealedReasons.size}/26 discovered
+                  </div>
                 </div>
               )}
             </div>
-          ))}
+            )
+          })}
         </div>
 
         <div className="progress-indicator">
@@ -376,38 +396,110 @@ const SpecialPage = ({ onNavigate }) => {
         .constellation-container {
           position: relative;
           width: 100%;
-          height: 750px;
+          height: 900px;
           margin: 2rem 0;
+          background: radial-gradient(circle at 50% 50%, rgba(255, 235, 59, 0.05) 0%, transparent 50%);
+          border-radius: 20px;
+          overflow: hidden;
         }
 
         .reason-star {
           position: absolute;
           cursor: pointer;
-          width: 70px;
-          height: 70px;
-          transition: all 0.3s ease;
-          animation: starAppear 0.8s ease-out;
+          width: 80px;
+          height: 80px;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          animation: starAppear 1s ease-out;
           z-index: 10;
+          filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
         }
 
         @keyframes starAppear {
           0% {
             opacity: 0;
-            transform: scale(0) rotate(180deg);
+            transform: scale(0) rotate(180deg) translateY(50px);
+          }
+          70% {
+            transform: scale(1.2) rotate(-10deg) translateY(0);
           }
           100% {
             opacity: 1;
-            transform: scale(1) rotate(0deg);
+            transform: scale(1) rotate(0deg) translateY(0);
           }
         }
 
         .reason-star:hover {
-          transform: scale(1.2);
-          filter: brightness(1.3);
+          transform: scale(1.3);
+          filter: brightness(1.5) drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
         }
 
         .reason-star:hover .star-core {
-          box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+          box-shadow: 0 0 25px rgba(255, 215, 0, 1);
+          animation: starPulse 0.6s infinite alternate;
+        }
+
+        @keyframes starPulse {
+          0% {
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+        }
+
+        .reason-star:active {
+          transform: scale(1.1);
+          transition: transform 0.1s ease;
+        }
+
+        .reason-star.star-clicked {
+          animation: starClick 0.6s ease-out;
+        }
+
+        @keyframes starClick {
+          0% {
+            transform: scale(1);
+          }
+          20% {
+            transform: scale(1.4) rotate(10deg);
+          }
+          40% {
+            transform: scale(1.2) rotate(-5deg);
+          }
+          60% {
+            transform: scale(1.3) rotate(3deg);
+          }
+          80% {
+            transform: scale(1.1) rotate(-1deg);
+          }
+          100% {
+            transform: scale(1) rotate(0deg);
+          }
+        }
+
+        .reason-star.star-clicked::after {
+          content: '✨';
+          position: absolute;
+          top: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 1.5rem;
+          animation: sparkle 0.6s ease-out;
+        }
+
+        @keyframes sparkle {
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(0) scale(0);
+          }
+          50% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px) scale(0.5);
+          }
         }
 
         .star-core {
@@ -415,21 +507,23 @@ const SpecialPage = ({ onNavigate }) => {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 20px;
-          height: 20px;
-          background: #ffd700;
+          width: 24px;
+          height: 24px;
+          background: linear-gradient(45deg, #ffd700, #ffeb3b);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 2px solid #ffeb3b;
-          transition: all 0.3s ease;
+          border: 3px solid #fff;
+          transition: all 0.4s ease;
+          box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         .star-number {
-          font-size: 0.8rem;
+          font-size: 0.9rem;
           font-weight: bold;
           color: #333;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .star-glow {
@@ -437,12 +531,23 @@ const SpecialPage = ({ onNavigate }) => {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 40px;
-          height: 40px;
-          background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+          width: 50px;
+          height: 50px;
+          background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, rgba(255, 235, 59, 0.1) 50%, transparent 70%);
           border-radius: 50%;
-          opacity: 0.6;
-          animation: pulse 2s infinite;
+          opacity: 0.8;
+          animation: breathe 3s infinite;
+        }
+
+        @keyframes breathe {
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.6;
+          }
+          50% { 
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 1;
+          }
         }
 
         .star-rays {
@@ -482,40 +587,66 @@ const SpecialPage = ({ onNavigate }) => {
         }
 
         .reason-star.revealed .star-core {
-          background: #ff6b9d;
-          border-color: #ff6b9d;
-          width: 25px;
-          height: 25px;
-          box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+          background: linear-gradient(45deg, #ff6b9d, #ff4081);
+          border-color: #fff;
+          width: 28px;
+          height: 28px;
+          box-shadow: 0 0 30px rgba(255, 107, 157, 0.8);
+          animation: revealedPulse 2s infinite;
         }
 
         .reason-star.revealed .star-glow {
-          background: radial-gradient(circle, rgba(255, 107, 157, 0.6) 0%, transparent 70%);
-          animation: pulse 1.5s infinite;
+          background: radial-gradient(circle, rgba(255, 107, 157, 0.4) 0%, rgba(255, 64, 129, 0.2) 50%, transparent 70%);
+          animation: revealedGlow 2s infinite;
+          width: 60px;
+          height: 60px;
+        }
+
+        @keyframes revealedPulse {
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.8);
+          }
+          50% { 
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 107, 157, 1);
+          }
+        }
+
+        @keyframes revealedGlow {
+          0%, 100% { 
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.8;
+          }
+          50% { 
+            transform: translate(-50%, -50%) scale(1.3);
+            opacity: 1;
+          }
         }
 
         .reason-popup {
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
-          background: rgba(0, 0, 0, 0.9);
-          backdrop-filter: blur(10px);
-          border: 2px solid #ffeb3b;
-          border-radius: 15px;
-          padding: 1rem;
-          min-width: 280px;
-          max-width: 320px;
+          background: linear-gradient(145deg, rgba(0, 0, 0, 0.95), rgba(26, 26, 46, 0.95));
+          backdrop-filter: blur(15px);
+          border: 3px solid #ffeb3b;
+          border-radius: 20px;
+          padding: 1.5rem;
+          min-width: 300px;
+          max-width: 350px;
           text-align: center;
-          animation: popupAppear 0.5s ease-out;
+          animation: popupAppear 0.6s cubic-bezier(0.4, 0, 0.2, 1);
           z-index: 100;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 235, 59, 0.3);
         }
 
         .popup-above {
-          top: -140px;
+          top: -160px;
         }
 
         .popup-below {
-          top: 80px;
+          top: 100px;
         }
 
         @keyframes popupAppear {
@@ -530,22 +661,53 @@ const SpecialPage = ({ onNavigate }) => {
         }
 
         .popup-emoji {
-          font-size: 2rem;
-          margin-bottom: 0.5rem;
+          font-size: 2.5rem;
+          margin-bottom: 0.8rem;
+          animation: emojiFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes emojiFloat {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
         }
 
         .popup-title {
           color: #ffeb3b;
-          font-size: 1.2rem;
+          font-size: 1.4rem;
           font-family: 'Brush Script MT', cursive;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.8rem;
+          text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+          font-weight: bold;
         }
 
         .popup-text {
-          color: #b39ddb;
-          font-size: 0.9rem;
-          line-height: 1.4;
+          color: #e1bee7;
+          font-size: 1rem;
+          line-height: 1.5;
           font-family: 'Brush Script MT', cursive;
+          margin-bottom: 1rem;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-counter {
+          background: linear-gradient(45deg, #ff6b9d, #ffeb3b);
+          color: #333;
+          padding: 0.5rem 1rem;
+          border-radius: 25px;
+          font-size: 0.9rem;
+          font-weight: bold;
+          font-family: 'Brush Script MT', cursive;
+          box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+          animation: counterGlow 2s infinite;
+        }
+
+        @keyframes counterGlow {
+          0%, 100% { 
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+          }
+          50% { 
+            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.6);
+          }
         }
 
         .progress-indicator {
@@ -786,31 +948,57 @@ const SpecialPage = ({ onNavigate }) => {
           }
 
           .constellation-container {
-            height: 650px;
+            height: 1100px;
           }
 
           .reason-star {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
           }
 
           .star-core {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
+          }
+
+          .star-number {
+            font-size: 0.8rem;
+          }
+
+          .star-glow {
+            width: 45px;
+            height: 45px;
           }
 
           .reason-popup {
-            min-width: 220px;
-            max-width: 280px;
-            padding: 0.8rem;
+            min-width: 260px;
+            max-width: 300px;
+            padding: 1.2rem;
           }
 
           .popup-above {
-            top: -120px;
+            top: -140px;
           }
 
           .popup-below {
-            top: 70px;
+            top: 90px;
+          }
+
+          .popup-emoji {
+            font-size: 2rem;
+          }
+
+          .popup-title {
+            font-size: 1.2rem;
+          }
+
+          .popup-text {
+            font-size: 0.9rem;
+          }
+
+          .popup-counter {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
           }
 
           .popup-title {
