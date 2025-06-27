@@ -1,0 +1,56 @@
+/* Global Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+/* CSS Variables for consistency across pages */
+:root {
+  --primary-pink: #ff6b9d;
+  --secondary-gold: #ffd700;
+  --accent-purple: #8a2be2;
+  --soft-white: #ffffff;
+  --light-pink: #ffe4f1;
+  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --celebration-gradient: linear-gradient(45deg, #ff6b9d, #ffd700, #8a2be2);
+}
+
+/* Remove default button styles */
+button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+}
+
+/* Ensure full height for all containers */
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} 
